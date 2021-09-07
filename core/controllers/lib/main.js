@@ -12,6 +12,11 @@ getData('config.json').then(response => {
     sitename_val.setAttribute('value', site_name)
     sitename_val.setAttribute('value', site_url)
     document.querySelector('#siteName, #siteUrl').classList.add('d-none')
+    document.querySelector("body").append(sitename_val, siteurl_val)
+
+    alert(sitename_val)
+    //Call site name
+    document.querySelector('#footerName').innerHTML = site_name
 })
 
 
@@ -20,7 +25,7 @@ let date = new Date();
 let year = date.getFullYear();
 document.getElementById('footerDate').innerHTML = year
 let site_name = document.getElementById('siteName')
-document.getElementById('footerName').innerHTML = site_name
+
 
 //1) Return Confirm on page close or reload
 window.onbeforeunload = function(e) {
@@ -323,8 +328,6 @@ function getSpec(slug) {
             //     heade.insertBefore(newMeta, heade.firstChild)
             // }
             // if (window.location.href = window.location+'#'+slug){
-
-
             Notiflix.Loading.Remove();
         })
 
