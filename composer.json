@@ -1,0 +1,31 @@
+{
+  "name": "mcdavidsh/phone-spec",
+  "description": "Api to display phone specification from GSM Arena",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "mcdavidsh",
+      "email": "mcdave92@gmail.com"
+    }
+  ],
+  "require": {
+    "ext-json": "*",
+    "ext-curl": "*",
+    "visualappeal/php-auto-update": ">=0.15.0",
+    "ext-zip": "*",
+    "mervick/aes-everywhere": "^1.1"
+  },
+  "repositories": [
+    {
+      "type": "composer",
+      "url": "https://asset-packagist.org"
+    }
+  ],
+  "autoload": {
+    "classmap": ["core/controllers"],
+    "psr-4": {
+      "Mcdavidsh\\Lib\\": "core/controllers"
+    }
+  }
+}
