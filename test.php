@@ -1,5 +1,9 @@
   <?php
 
+
+
+
+
       $siteUrl = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
         $shareUrl = urldecode($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
         $metaImg = 'https://fdn2.gsmarena.com/vv/bigpic/';

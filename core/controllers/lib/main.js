@@ -1,36 +1,61 @@
 //* Preface
+// var site_name;
+// var site_url;
 
 //Get site info
-
-getData('config.json').then(response => {
-    var site_name = response.sitename;
-    var site_url = response.siteurl;
- let sitename_val =   document.createElement('input')
+ const siteInfo = getData('config.json').then(response => {
+    var site_name = response.sitename
+   var  site_url = response.siteurl;
+   var  site_tag = response.tagline;
+ let sitename_val =  document.createElement('input')
  let siteurl_val =   document.createElement('input')
-    sitename_val.setAttribute('id','siteName')
-    siteurl_val.setAttribute('id','siteUrl')
+    sitename_val.setAttribute('id','info_site_name')
+    siteurl_val.setAttribute('id','info_site_url')
     sitename_val.setAttribute('value', site_name)
-    sitename_val.setAttribute('value', site_url)
-    document.querySelector('#siteName, #siteUrl').classList.add('d-none')
-    document.querySelector("body").append(sitename_val, siteurl_val)
-
-    alert(sitename_val)
+    sitename_val.setAttribute('class', 'd-none')
+    siteurl_val.setAttribute('value', site_url)
+    siteurl_val.setAttribute('class', 'd-none')
+     document.getElementById('footerName').innerHTML= site_name
+     document.getElementById('site-title').innerText= site_name
+     // document.querySelector('title').innerText= site_name +' - '+site_tag
+   let body_info = document.querySelector("body")
+    body_info.insertBefore(sitename_val, body_info.firstChild)
+    body_info.insertBefore(siteurl_val, body_info.firstChild)
     //Call site name
-    document.querySelector('#footerName').innerHTML = site_name
+
+     return response
 })
 
 
-//0) Year
+//0) Year footer
 let date = new Date();
 let year = date.getFullYear();
 document.getElementById('footerDate').innerHTML = year
-let site_name = document.getElementById('siteName')
 
 
 //1) Return Confirm on page close or reload
-window.onbeforeunload = function(e) {
-    return ""
-}
+window.onbeforeunload = function (event) {
+    var message = 'Important: Please click on \'Save\' button to leave this page.';
+    if (typeof event == 'undefined') {
+        event = window.event;
+    }
+    if (event) {
+        event.returnValue = message;
+    }
+    return message;
+};
+
+$(function () {
+    $("a").not('#lnkLogOut').click(function () {
+        window.onbeforeunload = null;
+    });
+    $(".btn").click(function () {
+        window.onbeforeunload = null;
+    });
+});
+// window.onbeforeunload = function(e) {
+//     return ""
+// }
 //End**********
 
 //2) Page Loader
@@ -300,35 +325,8 @@ function getSpec(slug) {
             document.querySelector('header').style.display = 'none'
             $('html, body').animate({ scrollTop: 0 }, 'slow')
             document.querySelector('#phonefullspec').classList.remove('d-none')
-            // let title = document.getElementById('mainTitle').innerText;
-            // let desc = document.getElementById('secondtitle').innerText;
-            // let img = document.getElementById('phoneImg').getAttribute('src');
-            // let phonemodel = document.getElementById('phonemodel').value;
-            // let shareUrl = window.location.href + '#' + phonemodel;
-            // let fbCt = [
-            //     'og:url',
-            //     'og:type',
-            //     'og:title',
-            //     'og:description',
-            //     'og:image'
-            // ]
-            // let fbcd = [
-            //     shareUrl,
-            //     'article',
-            //     title,
-            //     desc,
-            //     img
-            // ]
-            // for (let i = 0; i < fbCt.length ; i++) {
-            //     var newMeta = document.createElement('meta')
-            //     newMeta.setAttribute('property', fbCt[i])
-            //     newMeta.setAttribute('content', fbcd[i])
-            //     newMeta.setAttribute('title', title+ '- PhoneBase ')
-            //     let heade = document.querySelector('head')
-            //     heade.insertBefore(newMeta, heade.firstChild)
-            // }
-            // if (window.location.href = window.location+'#'+slug){
             Notiflix.Loading.Remove();
+
         })
 
     }
@@ -341,6 +339,9 @@ function getSpec(slug) {
 document.querySelector('#searchphone').addEventListener('click', () => {
     var phonemodel = document.getElementById('phonemodel').value.trim()
 getSpec(phonemodel)
+    siteInfo.then(res => {
+        window.location = res.siteurl + shareIndex + phonemodel
+    })
 })
 
 //9) Go Back To Header
@@ -374,11 +375,8 @@ $(window).scroll(function () {
 
 
 //13) Share Page, Facebook, twitter, Whatsapp
- var shareIndex = '127.0.0.1/projects/active/phone-db?q=';
 
-
-
-
+ var shareIndex = '?q=';
 
 function   socialPopUp(url)
 {
@@ -393,17 +391,14 @@ document.querySelector('#sharefb').addEventListener('click', ()=> {
     eventTrigger = true;
 
     if (eventTrigger) {
+        siteInfo.then(res => {
+            let shareUrl = res.siteurl + shareIndex + phonemodel
+            let phonemodel = document.querySelector('#phoneSlug').value;
 
-        let phonemodel = document.querySelector('#phoneSlug').value;
-        let shareUrl = shareIndex +phonemodel
-        if (shareIndex == shareUrl){
-            alert('yes')
-        }
+            let encodeUrl = encodeURIComponent(shareUrl)
+            socialPopUp('https://www.facebook.com/sharer/sharer.php?u='+encodeUrl)
+        })
 
-
-        let encodeUrl = encodeURIComponent(shareUrl)
-
-       socialPopUp('https://www.facebook.com/sharer/sharer.php?u='+encodeUrl)
         Notiflix.Loading.Remove()
         successShare()
     }
@@ -418,14 +413,16 @@ document.querySelector('#sharetw').addEventListener('click', ()=> {
     let title = document.getElementById('mainTitle').innerText;
     let desc = document.getElementById('secondtitle').innerText;
     let img = document.getElementById('phoneImg').getAttribute('src');
-    console.log(phonemodel)
     if (eventTrigger) {
-        let shareUrl = shareIndex+phonemodel
-        let encodeUrl = encodeURIComponent(shareUrl)
-        socialPopUp("https://twitter.com/intent/tweet?url="+encodeUrl)
+        siteInfo.then(res => {
+            let shareUrl = res.siteurl+shareIndex+phonemodel
+            let encodeUrl = encodeURIComponent(shareUrl)
+            socialPopUp("https://twitter.com/intent/tweet?url="+encodeUrl)
 
-        Notiflix.Loading.Remove()
-        successShare()
+            Notiflix.Loading.Remove()
+            successShare()
+        })
+
 
     }
 
@@ -439,10 +436,12 @@ document.querySelector('#sharewht').addEventListener('click', ()=> {
     let desc = document.getElementById('secondtitle').innerText;
     let img = document.getElementById('phoneImg').getAttribute('src');
     if (eventTrigger) {
-        let shareUrl = shareIndex+phonemodel
-        let encodeUrl = encodeURIComponent(shareUrl)
+        siteInfo.then(res => {
+            let shareUrl = res.siteurl + shareIndex + phonemodel
+            let encodeUrl = encodeURIComponent(shareUrl)
 
-        socialPopUp("https://api.whatsapp.com/send/?text="+encodeUrl)
+            socialPopUp("https://api.whatsapp.com/send/?text=" + encodeUrl)
+        })
         Notiflix.Loading.Remove()
         successShare()
     }
@@ -454,41 +453,48 @@ document.querySelector('#shareCopy').addEventListener('click', ()=> {
 
     eventTrigger = true;
     if (eventTrigger) {
-        let phonemodel = document.querySelector('#phoneSlug').value;
-        let shareUrl = shareIndex+phonemodel
-        let encodeUrl = encodeURIComponent(shareUrl)
-        var elem = document.createElement('input')
-        elem.setAttribute('value', shareUrl)
-        elem.setAttribute('id', 'copyValue')
-        elem.classList.add('d-none')
-        let elec = document.getElementById('shareCopy')
-        elec.append( elem)
-        let copyValue = document.getElementById('copyValue')
-        copyValue.classList.remove('d-none')
+
+        siteInfo.then(res => {
+            let phonemodel = document.querySelector('#phoneSlug').value;
+            let shareUrl = res.siteurl + shareIndex + phonemodel
+
+            let encodeUrl = encodeURIComponent(shareUrl)
+            var elem = document.createElement('input')
+            elem.setAttribute('value', shareUrl)
+            elem.setAttribute('id', 'copyValue')
+            elem.classList.add('d-none')
+            let elec = document.getElementById('shareCopy')
+            elec.append(elem)
+            let copyValue = document.getElementById('copyValue')
+            copyValue.classList.remove('d-none')
 
             copyValue.select()
 
-        copyValue.setSelectionRange(0, 99999)
-        document.execCommand("copy");
-        copyValue.classList.add('d-none')
-        Notiflix.Notify.Success('Link Copied')
-        copyValue.remove()
+            copyValue.setSelectionRange(0, 99999)
+            document.execCommand("copy");
+            copyValue.classList.add('d-none')
+            Notiflix.Notify.Success('Link Copied')
+            copyValue.remove()
+        })
         Notiflix.Loading.Remove()
     }
 
 })
 
+const getShareUrl = function () {
+    let seturl = decodeURIComponent(window.location.href)
 
-let seturl = decodeURIComponent(window.location.href)
+    let urlArray = seturl.split('/');
 
-let urlArray = seturl.split('/');
-
-let value = seturl.substring(seturl.lastIndexOf('/') + 1);
-var shareSlug =value.split('=')
+    let value = seturl.substring(seturl.lastIndexOf('/') + 1);
+    var shareSlug = value.split('q=')
 
 
-if (shareSlug[1]) {
+    if (shareSlug[1]) {
 
-    getSpec(shareSlug[1])
+        getSpec(shareSlug[1])
 
+    }
 }
+
+getShareUrl()

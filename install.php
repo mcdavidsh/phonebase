@@ -4,8 +4,9 @@ $temp_page ='install.html';
 if(isset($_POST['submit'])){
     $site_name = $_POST['sitename'];
     $site_url = $_POST['siteurl'];
+    $site_tag = $_POST['sitetag'];
 
-    $arr = array('sitename'=> $site_name, 'siteurl'=>$site_url);
+    $arr = array('sitename'=> $site_name,'tagline'=>$site_tag, 'siteurl'=>$site_url);
 
     $json_arr = json_encode($arr);
     if (file_put_contents($filename, $json_arr)){
@@ -57,6 +58,10 @@ window.location.reload();
                         <label class="form-label">Enter Site Name</label>
                         <input type="text" placeholder="PhoneBase"  class="form-control" value="" id="sitename"  name="sitename">
                     </div>
+                <div class="mb-3">
+                    <label class="form-label">Enter Site Tagline</label>
+                    <input type="text" placeholder="Mobile Specification Database"  class="form-control" value="" id="sitetag"  name="sitetag">
+                </div>
                     <div class="mb-3">
                         <label class="form-label">Enter Site Url</label>
                         <input type="url" placeholder="http://"  class="form-control" value="" id="siteurl" name="siteurl">

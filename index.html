@@ -4,8 +4,6 @@
     <meta charset="utf-8">
     <meta content="width=device-width, initial-scale=1" name="viewport">
     <meta name="keyword" content="android, samsung, iphone, infinix, mobile specification, iphone 12, iphone 11">
-
-    <title></title>
     <meta name="author" content="Softhood Technologies">
     <meta name="publisher" content="Softhood Technologies">
     <meta name="copyright" content="Softhood Technologies">
@@ -17,15 +15,40 @@
     <link href="core/assets/images/phonebaselogo.png" rel="icon" type="icon/x-image">
     <link href="core/assets/images/phonebaselogo.png" rel="apple-touch-icon" type="icon/x-image">
 
+    <?php
+
+    $sitelogo = "core/assets/images/phonebaselogo.png" ;
+$getfile = json_decode(file_get_contents('config.json'));
+$siteUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";;
+if($getfile->siteurl == $siteUrl){
+  echo "<title>$getfile->sitename - $getfile->tagline</title>";
+    //Google / Search Engine Tags
+    echo  '<meta itemprop="name" content="'.$getfile->sitename.'">';
+    echo   '<meta itemprop="description" content="'.$getfile->tagline.'">';
+    echo  ' <meta itemprop="image" content="'.$sitelogo.'">';
+    }else {
+    $urlQuery = parse_url($siteUrl );
+    parse_str($urlQuery['query'], $query);
+    $phonem = $query['q'];
+   $newPhonem = str_replace("_",' ', $phonem );
+    $finalPm = explode("-",$newPhonem);
+    $nPhM = ucwords($finalPm[0]);
+    echo "<title>$nPhM - $getfile->sitename</title>";
+
+
+
+    }
+?>
     <script>
+
         let siteUrl = window.location.host+ window.location.pathname;
         let shareUrl = decodeURIComponent(window.location.href)
         let metaImg = 'https://fdn2.gsmarena.com/vv/bigpic/'
         let valueDf = shareUrl.substring(shareUrl.lastIndexOf('/') + 1);
-        var getShareU=valueDf.split('#')
+        var getShareU=valueDf.split('q=')
         var homeTitle = ""
         var homeMeta = ""
-        var siteTitle = "PhoneBase - Mobile Specification Database"
+        // var siteTitle = "PhoneBase - Mobile Specification Database"
         var siteDesc = "A comprehensive list of over 100+ mobile devices specification updated on basis"
         var siteLogo = siteUrl+"core/assets/images/phonebaselogo.png"
         if (getShareU[1]){
@@ -51,6 +74,8 @@
             homeMeta+=    '    <meta name="twitter:title" content="'+resultTitle+' - '+siteTitle+'">'
             homeMeta+=   '    <meta name="twitter:description" content="View '+resultTitle+' - Specification">'
             homeMeta+=    '    <meta name="twitter:image" content="'+metaImg+cleanImg[0]+'">'
+            let $title = document.querySelector('title')
+            $title.innerText = homeTitle
         }else {
 
 
@@ -74,8 +99,8 @@
 
         let headInsert = document.querySelector('head')
         headInsert.insertAdjacentHTML('afterbegin', homeMeta)
-        let $title = document.querySelector('title')
-        $title.innerText = homeTitle
+
+
 
 
     </script>
@@ -150,13 +175,12 @@
 <body>
 
 <!-- Header -->
-
 <header class="hero overlay" id="hero">
     <div class="masthead text-center">
         <div class="container">
             <div class="row d-flex justify-content-center flex-column align-items-center ">
                 <div class="col-lg-10">
-                    <h1>Phonebase</h1>
+                    <h1 id="site-title"></h1>
                     <p class="lead text-muted">A comprehensive database specifications of over 100+ to mobile
                         devices.</p>
                     <div class="search-form">
@@ -180,18 +204,6 @@
            style="cursor:pointer;color: #7dc855 !important; box-shadow:rgb(0 0 0 / 10%) 0 12px 24px 0 ;"></i>
     </div>
 </header>
-<?php
-
-      $siteUrl = $_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI'];
-        $shareUrl = urldecode($_SERVER['HTTP_HOST'].$_SERVER['REQUEST_URI']);
-      $parse_url =  parse_url($shareUrl);
-        $metaImg = 'https://fdn2.gsmarena.com/vv/bigpic/';
-//  $array = explode('/', rtrim($shareUrl, '/'));
-//  $valueDf = end($array);
-//  $getShareU = explode('#', $valueDf);
-  var_dump(basename($shareUrl));
-
-  ?>
 <section class="topics px-3 py-3 d-none" id="phonefullspec">
     <input type="text" value="" id="phoneSlug" class="d-none">
     <div class="container">
