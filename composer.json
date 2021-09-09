@@ -23,7 +23,9 @@
     }
   ],
   "autoload": {
-    "classmap": ["core/controllers"],
+    "classmap": [
+      "core/controllers"
+    ],
     "psr-4": {
       "Mcdavidsh\\Lib\\": "core/controllers"
     }
