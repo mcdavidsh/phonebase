@@ -26,6 +26,18 @@ if($getfile->siteurl == $siteUrl){
     echo  '<meta itemprop="name" content="'.$getfile->sitename.'">';
     echo   '<meta itemprop="description" content="'.$getfile->tagline.'">';
     echo  ' <meta itemprop="image" content="'.$sitelogo.'">';
+    //Facebook Meta Tags
+  echo'<meta property="og:url" content="'.$getfile->siteurl.'">';
+    echo   '    <meta property="og:type" content="website">';
+    echo  '    <meta property="og:title" content="'.$getfile->sitename.'">';
+    echo '    <meta property="og:description" content="'.$getfile->tagline.'">';
+    echo '    <meta property="og:image" content="'. $sitelogo.'">';
+    //Twitter Meta Tags
+    echo' <meta name="twitter:card" content="summary_large_image">';
+    echo   '    <meta name="twitter:title" content="'.$getfile->sitename.'">';
+    echo  '    <meta name="twitter:description" content="'.$getfile->tagline.'">';
+    echo    '    <meta name="twitter:image" content="'. $sitelogo.'">';
+
     }else {
     $urlQuery = parse_url($siteUrl );
     parse_str($urlQuery['query'], $query);
@@ -34,7 +46,21 @@ if($getfile->siteurl == $siteUrl){
     $finalPm = explode("-",$newPhonem);
     $nPhM = ucwords($finalPm[0]);
     echo "<title>$nPhM - $getfile->sitename</title>";
-
+    //Google / Search Engine Tags
+  echo '    <meta itemprop="name" content="'.$nPhM - $getfile->sitename.'">';
+  echo '  <meta itemprop="description" content="View '.$nPhM .' - Specification">';
+    echo '    <meta itemprop="image" content="'+metaImg+cleanImg[0]+'">';
+    //Facebook Meta Tags
+  echo '<meta property="og:url" content="'+siteUrl+'">';
+    echo   '    <meta property="og:type" content="website">';
+    echo  '    <meta property="og:title" content="'+resultTitle+' - '+siteTitle+'">';
+    echo  '    <meta property="og:description" content="View '+resultTitle+' - Specification">';
+    echo '    <meta property="og:image" content="'+metaImg+cleanImg[0]+'">';
+    //Twitter Meta Tags
+   echo ' <meta name="twitter:card" content="summary_large_image">';
+    echo   '    <meta name="twitter:title" content="'+resultTitle+' - '+siteTitle+'">';
+    echo   '    <meta name="twitter:description" content="View '+resultTitle+' - Specification">';
+    echo    '    <meta name="twitter:image" content="'+metaImg+cleanImg[0]+'">';
 
 
     }
