@@ -7,8 +7,9 @@ use Mcdavidsh\Lib\GSMAPI;
 
 $gsm = new GSMAPI\Gsm();
 $gsm->siteInstall();
-
-
+$folder = $_SERVER['REQUEST_URI'];
+$rm_folder = str_replace('/install','', $folder);
+$url = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$rm_folder"
 ?>
 <!DOCTYPE html>
 <html lang="en">
@@ -47,9 +48,9 @@ $gsm->siteInstall();
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Enter Application Url</label>
-                            <input type="url" placeholder="http://" class="form-control"
-                                   value="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" ?>"
-                                   id="siteurl" name="siteurl">
+                            <input readonly type="url" placeholder="https://" class="form-control"
+                                   value="<?php echo $url; ?>" id="siteurl" name="siteurl">
+                            <div id="urlHelp" class="form-text text-danger">You cannot modify installation Url.</div>
                         </div>
                         <div class="mb-3">
                             <label class="form-label">Enter Your Email Address</label>

@@ -188,7 +188,7 @@ document.querySelector('#phonebrand').addEventListener('change', () => {
 function getSpec(slug) {
 
     Notiflix.Loading.Circle('Processing..')
-    if (phonebrand != "" || phonemodel != "") {
+    if (phonebrand != "" || phonemodel != "" || slug !="" || slug != null) {
 
 
         getData(apiPath + '?slug=' + slug).then(result => {
@@ -307,6 +307,7 @@ function getSpec(slug) {
     } else {
         errorMsg()
         Notiflix.Block.Remove();
+        return false;
     }
 
 }
