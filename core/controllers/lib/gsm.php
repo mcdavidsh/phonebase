@@ -1,10 +1,13 @@
 <?php
+
 namespace Mcdavidsh\Lib\GSMAPI;
 
 
 class Gsm
 {
     public $base_url = 'https://www.gsmarena.com/';
+    private $post_api = 'http://127.0.0.1/projects/active/shcentral/sh-license-key-manager/';
+
     public function __construct()
     {
         // Include library simple html dom
@@ -17,27 +20,8 @@ class Gsm
         $this->simbol = array("&", "+");
         $this->kata = array("_and_", "_plus_");
     }
+
     ####################### END cURL ##########################
-
-    private function mycurl($url)
-    {
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_USERAGENT, "Googlebot/2.1 (http://www.googlebot.com/bot.html)");
-        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
-        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
-        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        curl_setopt($ch, CURLOPT_URL, $url);
-
-        // Gagal ngecURL
-        if (!$site = curl_exec($ch)) {
-            return 'offline';
-        } // Sukses ngecURL
-        else {
-            return $site;
-        }
-    }
-
 
     public function search($q = "")
     {
@@ -119,6 +103,25 @@ class Gsm
         return $result;
     }
 
+    private function mycurl($url)
+    {
+        $ch = curl_init();
+        curl_setopt($ch, CURLOPT_USERAGENT, "Googlebot/2.1 (http://www.googlebot.com/bot.html)");
+        curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, 0);
+        curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, 0);
+        curl_setopt($ch, CURLOPT_FOLLOWLOCATION, 0);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+        curl_setopt($ch, CURLOPT_URL, $url);
+
+        // Gagal ngecURL
+        if (!$site = curl_exec($ch)) {
+            return 'offline';
+        } // Sukses ngecURL
+        else {
+            return $site;
+        }
+    }
+
     public function getNavigators($url)
     {
         $result = array();
@@ -179,6 +182,61 @@ class Gsm
         return $products;
     }
 
+    function header()
+    {
+        $sitelogo = "core/assets/images/phonebaselogo.png";
+        $getfile = json_decode(file_get_contents('config.json'));
+        $siteUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";;
+        if ($getfile->siteurl == $siteUrl) {
+            echo "<title>$getfile->sitename - $getfile->tagline</title>";
+            echo '<link rel="canonical" href="' . $getfile->siteurl . '" />';
+            //Google / Search Engine Tags
+            echo '<meta itemprop="name" content="' . $getfile->sitename . '">';
+            echo '<meta itemprop="description" content="' . $getfile->tagline . '">';
+            echo ' <meta itemprop="image" content="' . $sitelogo . '">';
+            //Facebook Meta Tags
+            echo '<meta property="og:url" content="' . $getfile->siteurl . '">';
+            echo '    <meta property="og:type" content="website">';
+            echo '    <meta property="og:title" content="' . $getfile->sitename . '">';
+            echo '    <meta property="og:description" content="' . $getfile->tagline . '">';
+            echo '    <meta property="og:image" content="' . $sitelogo . '">';
+            //Twitter Meta Tags
+            echo ' <meta name="twitter:card" content="summary_large_image">';
+            echo '    <meta name="twitter:title" content="' . $getfile->sitename . '">';
+            echo '    <meta name="twitter:description" content="' . $getfile->tagline . '">';
+            echo '    <meta name="twitter:image" content="' . $sitelogo . '">';
+
+        } else {
+            $urlQuery = parse_url($siteUrl);
+            parse_str($urlQuery['query'], $query);
+            $phonem = $query['q'];
+            $newPhonem = str_replace("_", ' ', $phonem);
+            $finalPm = explode("-", $newPhonem);
+            $nPhM = ucwords($finalPm[0]);
+            $getPhoneImg = $this->detail($phonem);
+            $metaImg = $getPhoneImg->img;
+            echo "<title>$nPhM - $getfile->sitename</title>";
+            echo '<link rel="canonical" href="' . $getfile->siteurl . '" />';
+            //Google Search Engine Tags
+            echo ' <meta itemprop="name" content="' . $nPhM . ' - ' . $getfile->sitename . '">';
+            echo '  <meta itemprop="description" content="View ' . $nPhM . ' - Specification">';
+            echo '    <meta itemprop="image" content="' . $metaImg . '">';
+            //Facebook Meta Tags
+            echo '<meta property="og:url" content="' . $getfile->siteurl . '">';
+            echo '    <meta property="og:type" content="website">';
+            echo '    <meta property="og:title" content="' . $nPhM . ' - ' . $getfile->sitename . '">';
+            echo '    <meta property="og:description" content="View ' . $nPhM . ' - Specification">';
+            echo '    <meta property="og:image" content="' . $metaImg . '">';
+            //Twitter Meta Tags
+            echo ' <meta name="twitter:card" content="summary_large_image">';
+            echo '    <meta name="twitter:title" content="' . $nPhM . ' - ' . $getfile->sitename . '">';
+            echo '    <meta name="twitter:description" content="View ' . $nPhM . ' - Specification">';
+            echo '    <meta name="twitter:image" content="' . $metaImg . '">';
+
+
+        }
+    }
+
     public function detail($slug = "")
     {
 
@@ -231,100 +289,100 @@ class Gsm
         return $result;
     }
 
-   function header(){
-       $sitelogo = "core/assets/images/phonebaselogo.png" ;
-       $getfile = json_decode(file_get_contents('config.json'));
-       $siteUrl = (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";;
-       if($getfile->siteurl == $siteUrl){
-           echo "<title>$getfile->sitename - $getfile->tagline</title>";
-           echo '<link rel="canonical" href="'.$getfile->siteurl.'" />';
-           //Google / Search Engine Tags
-           echo  '<meta itemprop="name" content="'.$getfile->sitename.'">';
-           echo   '<meta itemprop="description" content="'.$getfile->tagline.'">';
-           echo  ' <meta itemprop="image" content="'.$sitelogo.'">';
-           //Facebook Meta Tags
-           echo'<meta property="og:url" content="'.$getfile->siteurl.'">';
-           echo   '    <meta property="og:type" content="website">';
-           echo  '    <meta property="og:title" content="'.$getfile->sitename.'">';
-           echo '    <meta property="og:description" content="'.$getfile->tagline.'">';
-           echo '    <meta property="og:image" content="'. $sitelogo.'">';
-           //Twitter Meta Tags
-           echo' <meta name="twitter:card" content="summary_large_image">';
-           echo   '    <meta name="twitter:title" content="'.$getfile->sitename.'">';
-           echo  '    <meta name="twitter:description" content="'.$getfile->tagline.'">';
-           echo    '    <meta name="twitter:image" content="'. $sitelogo.'">';
+    function checkInstall()
+    {
+        $filename = 'config.json';
+        if (empty(file_get_contents($filename))) {
+            $temp_page = 'install/';
+            header("location:$temp_page");
+        }
+    }
 
-       }else {
-           $urlQuery = parse_url($siteUrl );
-           parse_str($urlQuery['query'], $query);
-           $phonem = $query['q'];
-           $newPhonem = str_replace("_",' ', $phonem );
-           $finalPm = explode("-",$newPhonem);
-           $nPhM = ucwords($finalPm[0]);
-           $getPhoneImg = $this->detail($phonem);
-           $metaImg = $getPhoneImg->img;
-           echo "<title>$nPhM - $getfile->sitename</title>";
-           echo '<link rel="canonical" href="'.$getfile->siteurl.'" />';
-           //Google Search Engine Tags
-           echo ' <meta itemprop="name" content="'.$nPhM .' - '.$getfile->sitename.'">';
-           echo '  <meta itemprop="description" content="View '.$nPhM .' - Specification">';
-           echo '    <meta itemprop="image" content="'.$metaImg.'">';
-           //Facebook Meta Tags
-           echo '<meta property="og:url" content="'.$getfile->siteurl.'">';
-           echo   '    <meta property="og:type" content="website">';
-           echo  '    <meta property="og:title" content="'.$nPhM .' - '.$getfile->sitename.'">';
-           echo  '    <meta property="og:description" content="View '.$nPhM .' - Specification">';
-           echo '    <meta property="og:image" content="'.$metaImg.'">';
-           //Twitter Meta Tags
-           echo ' <meta name="twitter:card" content="summary_large_image">';
-           echo   '    <meta name="twitter:title" content="'.$nPhM.' - '.$getfile->sitename.'">';
-           echo   '    <meta name="twitter:description" content="View '.$nPhM .' - Specification">';
-           echo    '    <meta name="twitter:image" content="'.$metaImg.'">';
+    function siteInstall()
+    {
+        try {
+            $filename = '../config.json';
+            $home = 'index.html';
+            if (empty(file_get_contents($filename))) {
+
+                if (isset($_POST['subscribe'])) {
+                    $site_name = $this->validate($_POST['sitename']);
+                    $site_url = $this->validate($_POST['siteurl']);
+                    $site_tag = $this->validate($_POST['sitetag']);
+                    $sub_email = $this->validate($_POST['subemail']);
+                    $newsletter = isset($_POST['newsletter']);
+
+                    if ($newsletter == 'yes') {
+                        $ans = 1;
+                    } else {
+                        $ans = 0;
+                    }
 
 
-       }
-   }
+                    if (empty($site_name)) {
+                        echo '<script> alert("Please provide Application Name") </script>';
+                    } elseif (empty($site_url)) {
+                        echo '<script> alert("Please provide Application Url") </script>';
+                    } elseif (empty($site_tag)) {
+                        echo '<script> alert("Please provide Application Tagline") </script>';
+                    } else {
 
-   function checkInstall(){
-       $filename = 'config.json';
-       if (empty(file_get_contents($filename))){
-           $temp_page ='install/';
-           header("location:$temp_page");
-       }
-   }
-   function siteInstall(){
-       $filename = '../config.json';
-       $home ='index.html';
-       if (empty(file_get_contents($filename))){
+                        $arr = array('sitename' => $site_name, 'tagline' => $site_tag, 'siteurl' => $site_url);
 
-           if(isset($_POST['submit'])) {
-               $site_name = $_POST['sitename'];
-               $site_url = $_POST['siteurl'];
-               $site_tag = $_POST['sitetag'];
+                        $json_arr = json_encode($arr);
+                        $post_data = array(
+                            'subemail' => $sub_email,
+                            'newsletter' => $ans
+                        );
 
-               if (empty($site_name)) {
-                   echo '<script> alert("Please provide Application Name") </script>';
-               } elseif (empty($site_url)) {
-                   echo '<script> alert("Please provide Application Url") </script>';
-               } elseif (empty($site_tag)) {
-                   echo '<script> alert("Please provide Application Tagline") </script>';
-               } else {
+                        $client = curl_init($this->post_api);
+                        curl_setopt($client, CURLOPT_POST, true);
+                        curl_setopt($client, CURLOPT_POSTFIELDS, $post_data);
+                        curl_setopt($client, CURLOPT_RETURNTRANSFER, true);
+                        $response = curl_exec($client);
+                        curl_close($client);
 
-                   $arr = array('sitename' => $site_name, 'tagline' => $site_tag, 'siteurl' => $site_url);
+                        $result = json_decode($response);
+                        $status = $result->status;
+                        if ($status == 'empty') {
+                            echo '<script> alert("Please Provide Email") </script>';
+                        } elseif ($status == 'exists') {
+                            echo '<script> alert("Email has already subscribed to receive updates, please provide another email.") </script>';
+                        }elseif ($status == "invalid") {
+                            echo '<script> alert("Invalid Email, please check and try again.") </script>';
+                        }
+                        else {
+                            if ($status == 'success') {
 
-                   $json_arr = json_encode($arr);
-                   if (file_put_contents($filename, $json_arr) && !empty(file_get_contents($filename))) {
-                       echo '<script> alert("Application Information updated successfully.. Redirecting..") </script>';
-                       header("refresh:5; url:$home");
+                                if (file_put_contents($filename, $json_arr) && !empty(file_get_contents($filename))) {
 
-                   }
+                                    echo '<script> alert("Application ready to use... Redirecting..") </script>';
+                                    header("refresh:5; url:$home");
+                                } else {
+                                    echo '<script> alert("Error Occured, please try again.") </script>';
+                                }
+                            }
+                        }
 
-               }
-           }
-       }else {
-           header("location:../index.html");
-       }
-   }
+                    }
+                }
+            } else {
+                header("location:../");
+            }
 
 
+        } catch (\Exception $exception) {
+            echo $exception->getMessage();
+        }
+
+    }
+
+    public function validate($data)
+    {
+        $data = trim($data);
+        $data = stripslashes($data);
+        $data = strip_tags($data);
+        $data = htmlspecialchars($data);
+        return $data;
+    }
 }

@@ -22,15 +22,18 @@ $gsm->siteInstall();
 </head>
 <body class="bg-light">
 <div class="container">
-    <div class="text-center">
-        <h1 class="display-4"><img src="../core/assets/images/phonebaselogo.png" class="img-fluid" width="50">Welcome to
-            Phonebase</h1>
-    </div>
-    <p class="text-center text-capitalize">Complete setup to begin use of this app.</p>
+
     <div class="row justify-content-center py-5 align-items-center h-100">
         <div class="col-md-6">
             <form method="post">
                 <div class="card ">
+                    <div class="card-header">
+                        <div class="text-center">
+                            <h3 class=""><img src="../core/assets/images/logo.png" class="img-fluid" width="50">Welcome to
+                                Phonebase</h3>
+                        </div>
+                        <p class="text-center">Thank you for purchasing this app, Complete setup to start using app.</p>
+                    </div>
                     <div class="card-body">
                         <div class="mb-3">
                             <label class="form-label">Enter Application Name</label>
@@ -48,12 +51,18 @@ $gsm->siteInstall();
                                    value="<?php echo (isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] === 'on' ? "https" : "http") . "://$_SERVER[HTTP_HOST]" ?>"
                                    id="siteurl" name="siteurl">
                         </div>
-
-
+                        <div class="mb-3">
+                            <label class="form-label">Enter Your Email Address</label>
+                            <input type="email"  placeholder="example@example.com" class="form-control" value="" id="subemail" name="subemail">
+                        </div>
                     </div>
                     <div class="card-footer">
-
-                        <button type="submit" class="btn btn-success" id="sbturl" name="submit">Continue</button>
+                        <div class="form-group form-check my-3">
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1" value="no" name="newsletter" hidden>
+                            <input type="checkbox" class="form-check-input" id="exampleCheck1" value="yes" name="newsletter">
+                            <label class="form-check-label" for="exampleCheck1">Opt-in for weekly newsletter and blog updates from <a href="https://mysofthood.com" class="">Softhood Technologies</a></label>
+                        </div>
+                        <button type="submit" class="btn" style="background: #7dc855 !important; border: 1px solid #7dc855; color: #ffffff;" id="sbturl" name="subscribe">Continue</button>
                     </div>
                 </div>
             </form>

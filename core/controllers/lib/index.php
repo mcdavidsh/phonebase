@@ -17,8 +17,6 @@ if (!empty($_GET['query'])) {
     $data = $gsm->detail($_GET['slug']);
 } elseif (!empty($_GET['brands'])) {
     $data = $gsm->getBrands();
-} elseif (isset($_POST['saveImage'])) {
-    $data = $gsm->saveImg();
 } else {
     $data['status'] = 'error';
 }
